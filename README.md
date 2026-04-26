@@ -2,7 +2,6 @@
 
 An internal company chatbot built with Retrieval-Augmented Generation (RAG) that enforces **Role-Based Access Control (RBAC)**, protects sensitive data with **guardrails**, and is designed for production monitoring with **LangSmith** and **Ragas**.
 
-Built as part of the [codebasics.io Gen-AI Resume Project Challenge](https://codebasics.io/challenges/codebasics-gen-ai-data-science-resume-project-challenge/19).
 
 ---
 
