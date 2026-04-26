@@ -11,7 +11,10 @@ from retrieval.rbac import get_allowed_departments
 
 def _get_collection():
     ef = SentenceTransformerEmbeddingFunction(model_name=EMBEDDING_MODEL)
-    client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIR)
+    client = chromadb.PersistentClient(
+        path=CHROMA_PERSIST_DIR,
+        settings=chromadb.config.Settings(anonymized_telemetry=False),
+    )
     return client.get_collection(name=CHROMA_COLLECTION, embedding_function=ef)
 
 
