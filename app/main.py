@@ -1,7 +1,11 @@
 """
 Streamlit frontend for the RAG + RBAC + Guardrails chatbot.
-Run with:  streamlit run app/main.py
+Run with:  streamlit run app/main.py  (from the project root)
 """
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 
 from retrieval.rbac import USERS, get_allowed_departments
