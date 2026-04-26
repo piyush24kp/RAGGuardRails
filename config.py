@@ -15,3 +15,10 @@ CHROMA_COLLECTION = "company_docs"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"  # runs locally, no API key needed
 
 DATA_DIR = "./DS-RPC-01/data"  # department subfolders live here
+
+# LangSmith — variables are picked up automatically by LangChain when set in .env.
+# Supported variable names (both work, LangSmith dashboard gives LANGSMITH_* style):
+#   LANGSMITH_TRACING / LANGCHAIN_TRACING_V2
+#   LANGSMITH_API_KEY / LANGCHAIN_API_KEY
+#   LANGSMITH_ENDPOINT
+#   LANGSMITH_PROJECT / LANGCHAIN_PROJECT
