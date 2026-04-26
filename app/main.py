@@ -6,12 +6,22 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import re
 import streamlit as st
 
 from retrieval.rbac import USERS, get_allowed_departments
 from retrieval.rag_chain import answer
 from guardrails.scope_check import check_scope
 from guardrails.pii_filter import redact
+
+_GREETING_RE = re.compile(
+    r"^\s*(hi|hello|hey|good\s*(morning|afternoon|evening)|howdy|greetings|what'?s up|how are you)\W*\s*$",
+    re.IGNORECASE,
+)
+
+
+def _greeting_response(display_name: str) -> str:
+    return f"Hello, {display_name}! How can I help you today? You can ask me about HR policies, financial reports, company guidelines, or anything else within your access."
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -82,7 +92,14 @@ if query:
         st.markdown(query)
 
     with st.chat_message("assistant"):
-        # 1. Scope check
+        # 1. Greeting check — respond directly, skip RAG and scope check entirely
+        if _GREETING_RE.match(query):
+            greeting_reply = _greeting_response(user_info["display_name"])
+            st.markdown(greeting_reply)
+            st.session_state.messages.append({"role": "assistant", "content": greeting_reply})
+            st.stop()
+
+        # 2. Scope check
         in_scope, scope_reason = check_scope(query)
         if not in_scope:
             st.warning(scope_reason)
@@ -93,17 +110,17 @@ if query:
             })
             st.stop()
 
-        # 2. Retrieve + generate
+        # 3. Retrieve + generate
         with st.spinner("Thinking..."):
             result = answer(query, role)
 
         raw_answer = result["answer"]
         sources = result["sources"]
 
-        # 3. PII filter on output
+        # 4. PII filter on output
         clean_answer, pii_found = redact(raw_answer)
 
-        # 4. Display
+        # 5. Display
         st.markdown(clean_answer)
         if sources:
             with st.expander("Sources", expanded=False):
